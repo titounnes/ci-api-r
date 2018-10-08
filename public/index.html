@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Rest-Api | CodeIgniter 4</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Rest Api With CodeeIgnirer4">
+        <meta content='id' name='language'/>
+        <meta content='id' name='geo.country'/>
+        <meta content='Indonesia' name='geo.placename'/>
+        <meta name="keywords" content="REST-API, CodeIgniter4">
+        <meta name="author" content="Harjito, zano.amrhakim@gmail.com">
+        <link rel="manifest" href="/manifest.json">
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-app-title" content="e-Project">
+        <meta name="msapplication-TileImage" content="favicon.ico">
+        <meta name="msapplication-TileColor" content="#2F3BA2">
+        <title>E-Project</title>
+        <link rel="apple-touch-icon" href="favicon.ico">
+        <script>
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker
+              .register('/service-worker-workbox.min.js')
+          }
+        </script>
+        <link href="http://e-project.local/assets/css/pulse/bulmaswatch.min.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="container">
+            <h1 class="title">Pengujian API dengan Codeigniter 4</h1>
+            <div class="section">
+                <div class="columns">
+                    <div class="column">
+                        <h2 class="title">Parameter</h2>
+                        <p class="control">Domain: <span class="field"><input class="input" id="domain" value="" name="domain"></span></p>
+                        <p class="control">Route: <div class="field"><span class="select"><select class="dropdown" id="route" value="" name="route" placeholder="Pilih route"></select></span></div></p>
+                        <p class="control">Bearer: <div class="field"><input class="input" id="bearer" value="" name="bearer"></div></p>
+                        <p class="control">Param: <div class="field"><input class="input" id="param" value="" placeholder="param1=foo&param2=bar" name="param"></div></p>
+                        <p class="control">Method: <div class="field"><span class="select"><select class="select" id="method" name="method"><option value="POST">POST</option><option value="GET">GET</option></select></span></div></p>
+                        <p class="control"><a href="#" class="button is-primary is-rounded" id="btn">Execute</a></p>
+                    </div>
+                    <div class="column">
+                        <h3 class="title">Hasil</h3>
+                        <p class="control">Status: <textarea class="input" style="resize:none" id="status" readonly placeholder="status"></textarea></p>
+                        <p class="control">Executing Time: <textarea class="input" style="resize:none" id="time" readonly placeholder="Waktu eksekusi"></textarea></p>
+                        <p class="control">Pesan: <textarea class="input" style="resize:none" id="message" readonly placeholder="pesan"></textarea></p>
+                        <p class="control">Data: <textarea class="input" style="height:300px;resize:none" id="data" readonly placeholder="data"></textarea></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="http://e-project.local/assets/js/jquery.min.js"></script>
+        <script>
+        var route = [
+            'guest/postIdentity',
+            'guest/postPassword',
+            'guest/requestToken',
+            'teacher/course/item',
+            'teacher/lesson/item',
+            'teacher/lesson/read',
+            'teacher/lesson/write',
+            'teacher/competence/cognitive',
+            'teacher/project/item',
+            'teacher/project/read',
+            'teacher/project/write',
+            'teacher/performance/item',
+            'teacher/performance/read',
+            'teacher/performance/write',
+            'teacher/evaluation/item',
+        ];
+        var param = {
+            'guest/postIdentity': 'identity=132307277',
+            'guest/postPassword': 'password=m12@n0@mr',
+            'teacher/course/item': 'title=',
+            'teacher/lesson/item': 'title=',
+            'teacher/lesson/read': 'id=8',
+            'teacher/lesson/write': 'id=8&lesson=pelajaran ke ...',
+            'teacher/competence/cognitive': 'classroom_id=5&course_id=3',
+            'teacher/project/item': 'classroom_id=5&course_id=3',
+            'teacher/project/read': 'id=8',
+            'teacher/project/write': 'id=8&project=Project ke ...',
+            'teacher/performance/item': 'classroom_id=5&course_id=3',
+            'teacher/performance/read': 'id=2',
+            'teacher/performance/write': 'id=2&performance=Unjuk kerja ke ...',
+            'teacher/evaluation/item': 'classroom_id=5&course_id=3',
+        }
+        var errorMsg = {
+            405: 'Method tidak diijinkan',
+            404: 'Url tidak valid',
+        };
+        var jwt = localStorage['jwt'];
+        $(document).ready(function(){
+            $('#domain').val('http://'+window.location.host+'/api/');
+            var optRoute = '<option value="">Pilih Salah satu</option>';
+            $.each(route, function(i, v){
+                optRoute += '<option value="'+v+'">'+v+'</option>';
+            })
+            $('#route').html(optRoute);
+            $(document).on('click', '#btn', function(){
+                if($('#domain').val() ==''){
+                    return $('#status').html('data belum diisi');
+                }
+                $('#status').html('Menunggu hasil ....')
+                $('#time').html('');
+                $('#message').html('');
+                $('#data').html('');
+                $('#jwt').html('');
+                $.ajax({
+                    url: $('#domain').val()+$('#route').val(),
+                    crossDomain: true,
+                    dataType: 'json',
+                    headers: {
+                        "Bearer": $('#bearer').val(),
+                        "X-Requested-With": 'XMLHTTPRequest',
+                    },
+                    method: $('#method').val(),
+                    data: '{&'+$('#param').val()+'&}',
+                    complete: function(response){                
+                        if(response.status == 200){
+                            //console.log(response)
+                            $('#status').html('OK: '+response.status);    
+                            $('#time').html(response.responseJSON.time);    
+                            $('#message').html(response.responseJSON.message);
+                            $('#data').html(JSON.stringify( response.responseJSON.data));
+                            $('#jwt').html(response.responseJSON.token);
+                            if(response.responseJSON.token!=''){
+                                localStorage['jwt'] = response.responseJSON.token;
+                            }
+                            return false;
+                        }
+                        //console.clear();
+                        $('#status').html('Error: '+response.status);
+                        $('#message').html(errorMsg[response.status]);
+                        $('#data').html('');
+                        $('#jwt').html('');
+                    }
+                })
+            })
+            $(document).on('change','#route', function(){
+                $('#param').val(param[$(this).val()]);
+            if($(this).val()!='guest/postIdentity'){
+                    $('#bearer').val(localStorage['jwt'])
+                }else{
+                    $('#bearer').val('')
+                }
+            })
+        })
+        </script>        
+    </body>
+</html>
