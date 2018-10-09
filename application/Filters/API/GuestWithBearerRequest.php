@@ -14,8 +14,8 @@ final class GuestWithBearerRequest implements FilterInterface
     public function before(RequestInterface $request)
     {
         (Config('App'))->time = microtime(true);
-            
-        if($request->getMethod() === 'post' && $request->isAJAX()===TRUE && $request->getServer('HTTP_BEARER') !== NULL)
+        //$request->isAJAX()=== TRUE &&
+        if($request->getMethod() === 'post' && $request->getServer('HTTP_BEARER') !== NULL)
         {
             $token = JWT::decode($request->getServer('HTTP_BEARER'), (Config('Jwt'))->key, [(Config('Jwt'))->algo]);
             

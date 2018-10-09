@@ -9,10 +9,7 @@ class Item extends \App\Controllers\Api\Base
     {
 
         return $this->success(
-            (new Data())->getByClassroomCourse(
-                $this->request->getPost('classroom_id'), 
-                $this->request->getPost('course_id')
-            ),
+            (new Data())->getByClassroomCourse( $this->request->getPost('classroom_id'), $this->request->getPost('course_id') ),
             'Sukses'
         );
         

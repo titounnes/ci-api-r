@@ -13,10 +13,10 @@ use Firebase\JWT\JWT;
 final class UserLoginRequest implements FilterInterface
 {
     public function before(RequestInterface $request)
-    {
+    {    
         (Config('App'))->time = microtime(true);
-            
-        if($request->getMethod() === 'post' && $request->isAJAX()===TRUE && $request->getServer('HTTP_BEARER') !== NULL)
+        //$request->isAJAX()=== TRUE &&
+        if($request->getMethod() === 'post' &&  $request->getServer('HTTP_BEARER') !== NULL)
         {
             $token = JWT::decode($request->getServer('HTTP_BEARER'), (Config('Jwt'))->key, [(Config('Jwt'))->algo]);
             
@@ -30,6 +30,7 @@ final class UserLoginRequest implements FilterInterface
 
                 if( in_array((explode('/',$request->getServer('REQUEST_URI')))[2], explode('|', $token->roles)) )
                 {
+                    
                     return (Config('App'))->session = $token;
                 }
 

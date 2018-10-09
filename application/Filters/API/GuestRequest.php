@@ -13,8 +13,8 @@ final class GuestRequest implements FilterInterface
     public function before(RequestInterface $request)
     {
         (Config('App'))->time = microtime(true);
-            
-        if($request->getMethod() === 'post' && $request->isAJAX()===TRUE)
+        //$request->isAJAX()=== TRUE &&
+        if($request->getMethod() === 'post')
         {
             return true;
         }
