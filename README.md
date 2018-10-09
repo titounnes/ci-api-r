@@ -43,7 +43,9 @@ codeigniter/
 ## Demo
 
 * Run demo on [here](https://api-ci4.e-project-tech.com/index.html#) 
-
+* Username: tacher
+* Password: demo123
+ 
 ## Donasi
 * [Paypal](https://www.paypal.me/harjito) 
 
