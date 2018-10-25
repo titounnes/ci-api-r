@@ -32,6 +32,7 @@ codeigniter/
 * PHP 7.1 or later
 * [CodeIgniter4](https://github.com/bcit-ci/CodeIgniter4)
 * `composer` command (See [Composer Installation](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-osx))
+* [Kenji's Installer](https://github.com/kenjis/codeigniter-composer-installer/tree/4.x)
 * Git
 * fireebase-jwt: composer require firebase/php-jwt
 
